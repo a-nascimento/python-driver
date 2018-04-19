@@ -34,6 +34,7 @@ from cassandra.protocol import (write_stringmultimap, write_int, write_string,
                                 SupportedMessage, ReadyMessage, ServerError)
 from cassandra.marshal import uint8_pack, uint32_pack, int32_pack, uint16_pack
 from tests import is_monkey_patched
+from tests.unit import driver_context
 from tests.unit.io.utils import submit_and_wait_for_completion, TimerCallback
 
 class AsyncoreConnectionTest(unittest.TestCase):
@@ -62,7 +63,9 @@ class AsyncoreConnectionTest(unittest.TestCase):
             raise unittest.SkipTest("Can't test asyncore with monkey patching")
 
     def make_connection(self):
-        c = AsyncoreConnection('1.2.3.4', cql_version='3.0.1', connect_timeout=5)
+        c = AsyncoreConnection(
+            '1.2.3.4', cql_version='3.0.1', connect_timeout=5,
+            protocol_handler=driver_context.protocol_handler)
         c.socket = Mock()
         c.socket.send.side_effect = lambda x: len(x)
         return c

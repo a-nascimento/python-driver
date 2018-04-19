@@ -21,10 +21,10 @@ from mock import patch, Mock
 
 import time
 
+from tests.unit import driver_context
 from tests.unit.io.utils import submit_and_wait_for_completion, TimerCallback
 from tests.unit.io.utils import TimerConnectionTests
 from tests import is_monkey_patched
-
 
 try:
     from cassandra.io.libevreactor import LibevConnection
@@ -44,7 +44,8 @@ class LibevTimerTest(unittest.TestCase):
         LibevConnection.initialize_reactor()
 
     def make_connection(self):
-        c = LibevConnection('1.2.3.4', cql_version='3.0.1')
+        c = LibevConnection('1.2.3.4', cql_version='3.0.1',
+            protocol_handler=driver_context.protocol_handler)
         c._socket = Mock()
         c._socket.send.side_effect = lambda x: len(x)
         return c

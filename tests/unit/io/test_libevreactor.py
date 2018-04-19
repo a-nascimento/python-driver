@@ -33,7 +33,7 @@ from cassandra.protocol import (write_stringmultimap, write_int, write_string,
 from cassandra.marshal import uint8_pack, uint32_pack, int32_pack, uint16_pack
 
 from tests import is_monkey_patched
-
+from tests.unit import driver_context
 
 try:
     from cassandra.io.libevreactor import _cleanup as libev__cleanup
@@ -57,7 +57,9 @@ class LibevConnectionTest(unittest.TestCase):
         LibevConnection.initialize_reactor()
 
     def make_connection(self):
-        c = LibevConnection('1.2.3.4', cql_version='3.0.1')
+        c = LibevConnection(
+            '1.2.3.4', cql_version='3.0.1',
+            protocol_handler=driver_context.protocol_handler)
         c._socket = Mock()
         c._socket.send.side_effect = lambda x: len(x)
         return c
