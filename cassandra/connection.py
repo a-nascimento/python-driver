@@ -318,7 +318,7 @@ class Connection(object):
         raise NotImplementedError()
 
     @classmethod
-    def factory(cls, protocol_handler, host, timeout, *args, **kwargs):
+    def factory(cls, host, timeout, *args, **kwargs):
         """
         A factory function which returns connections which have
         succeeded in connecting and are ready for service (or
@@ -326,7 +326,7 @@ class Connection(object):
         """
         start = time.time()
         kwargs['connect_timeout'] = timeout
-        conn = cls(protocol_handler, host, *args, **kwargs)
+        conn = cls(host, *args, **kwargs)
         elapsed = time.time() - start
         conn.connected_event.wait(timeout - elapsed)
         if conn.last_error:

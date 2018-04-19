@@ -964,8 +964,7 @@ class Cluster(object):
         """
         kwargs = self._make_connection_kwargs(address, kwargs)
         return self.connection_class.factory(
-            self._context.protocol_handler, address, self.connect_timeout,
-            *args, **kwargs)
+            address, self.connect_timeout, *args, **kwargs)
 
     def _make_connection_factory(self, host, *args, **kwargs):
         kwargs = self._make_connection_kwargs(host.address, kwargs)
