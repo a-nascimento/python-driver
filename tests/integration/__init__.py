@@ -33,6 +33,7 @@ from subprocess import call
 from itertools import groupby
 import six
 
+from cassandra.context import DriverContext
 from cassandra import OperationTimedOut, ReadTimeout, ReadFailure, WriteTimeout, WriteFailure, \
     AlreadyExists, InvalidRequest
 
@@ -60,6 +61,8 @@ if not os.path.exists(path):
 cass_version = None
 cql_version = None
 
+# Default DriverContext used in some tests
+driver_context = DriverContext()
 
 def get_server_versions():
     """
