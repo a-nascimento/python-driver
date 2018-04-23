@@ -27,6 +27,7 @@ except ImportError:
     twistedreactor = None  # NOQA
 
 from cassandra.connection import _Frame
+from tests.unit import driver_context
 from tests.unit.io.utils import submit_and_wait_for_completion, TimerCallback
 
 
@@ -46,8 +47,10 @@ class TestTwistedTimer(unittest.TestCase):
         Verify that the timers are called in the correct order
         """
         twistedreactor.TwistedConnection.initialize_reactor()
-        connection = twistedreactor.TwistedConnection('1.2.3.4',
-                                                       cql_version='3.0.1')
+        connection = twistedreactor.TwistedConnection(
+            driver_context.protocol_handler,
+            '1.2.3.4',
+            cql_version='3.0.1')
         # Tests timers submitted in order at various timeouts
         submit_and_wait_for_completion(self, connection, 0, 100, 1, 100)
         # Tests timers submitted in reverse order at various timeouts
@@ -61,8 +64,10 @@ class TestTwistedTimer(unittest.TestCase):
         """
 
         # Various lists for tracking callback stage
-        connection = twistedreactor.TwistedConnection('1.2.3.4',
-                                                       cql_version='3.0.1')
+        connection = twistedreactor.TwistedConnection(
+            driver_context.protocol_handler,
+            '1.2.3.4',
+            cql_version='3.0.1')
         timeout = .1
         callback = TimerCallback(timeout)
         timer = connection.create_timer(timeout, callback.invoke)
@@ -148,8 +153,10 @@ class TestTwistedConnection(unittest.TestCase):
         self.reactor_run_patcher = patch('twisted.internet.reactor.run')
         self.mock_reactor_cft = self.reactor_cft_patcher.start()
         self.mock_reactor_run = self.reactor_run_patcher.start()
-        self.obj_ut = twistedreactor.TwistedConnection('1.2.3.4',
-                                                       cql_version='3.0.1')
+        self.obj_ut = twistedreactor.TwistedConnection(
+            driver_context.protocol_handler,
+            '1.2.3.4',
+            cql_version='3.0.1')
 
     def tearDown(self):
         self.reactor_cft_patcher.stop()

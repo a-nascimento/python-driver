@@ -205,9 +205,9 @@ class ConnectionTests(object):
             try:
                 contact_point = CASSANDRA_IP
                 conn = self.klass.factory(
+                    driver_context.protocol_handler,
                     host=contact_point, timeout=timeout, 
-                    protocol_version=PROTOCOL_VERSION,
-                    protocol_handler=driver_context.protocol_handler)
+                    protocol_version=PROTOCOL_VERSION)
                 break
             except (OperationTimedOut, NoHostAvailable, ConnectionShutdown) as e:
                 continue

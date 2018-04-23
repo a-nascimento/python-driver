@@ -58,8 +58,8 @@ class LibevConnectionTest(unittest.TestCase):
 
     def make_connection(self):
         c = LibevConnection(
-            '1.2.3.4', cql_version='3.0.1',
-            protocol_handler=driver_context.protocol_handler)
+            driver_context.protocol_handler,
+            '1.2.3.4', cql_version='3.0.1')
         c._socket = Mock()
         c._socket.send.side_effect = lambda x: len(x)
         return c

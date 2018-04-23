@@ -64,8 +64,8 @@ class AsyncoreConnectionTest(unittest.TestCase):
 
     def make_connection(self):
         c = AsyncoreConnection(
-            '1.2.3.4', cql_version='3.0.1', connect_timeout=5,
-            protocol_handler=driver_context.protocol_handler)
+            driver_context.protocol_handler,
+            '1.2.3.4', cql_version='3.0.1', connect_timeout=5)
         c.socket = Mock()
         c.socket.send.side_effect = lambda x: len(x)
         return c
